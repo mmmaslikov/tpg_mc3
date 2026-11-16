@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Инструкция для участников ТПГ «ГенИИ»: соберите промт, обсудите план с Qwen и опубликуйте страницу своей сферы в каталоге «Точка ИИ».">
+<title>Страница вашей сферы · инструкция ТПГ «ГенИИ» · Точка ИИ</title>
+<style>
+/* ============ ПАЛИТРА КАТАЛОГА «ТОЧКА ИИ» ============ */
+:root{
+  --bg:#f2f2f2; --m2:#e6e6e6; --charcoal:#2f2d2c;
+  --surface:#ffffff; --surface-2:#fafafa;
+  --text:#1d1d1f; --muted:#6f6f6f;
+  --line:rgba(0,0,0,.10);
+  --accent:#0071e3; --accent-soft:rgba(0,113,227,.10);
+  --hero-acc:#4da3ff; --ok:#248a3d;
+  --violet:#8944ab; --green:#248a3d; --teal:#0071a4;
+  --radius:22px; --shadow:0 12px 34px rgba(0,0,0,.10);
+  --nav-h:62px; --pad:clamp(16px,4vw,44px); --wrap:1100px; --zoom:1;
+  --sb-track:#e6e6e6; --sb-thumb:#c7c7cc; --sb-hover:#a1a1a6;
+}
+@media (min-width:1800px){:root{--zoom:1.2}}
+html{zoom:var(--zoom)}
+[data-theme="dark"]{
+  --bg:#161616; --m2:#1d1d1d; --charcoal:#232120;
+  --surface:#222222; --surface-2:#2a2a2a; --text:#f2f2f2; --muted:#9c9c9c;
+  --line:rgba(255,255,255,.12); --accent:#2997ff; --accent-soft:rgba(41,151,255,.16);
+  --hero-acc:#2997ff; --ok:#30d158;
+  --violet:#bf5af2; --green:#30d158; --teal:#64d2ff;
+  --shadow:0 14px 40px rgba(0,0,0,.5);
+  --sb-track:#1d1d1d; --sb-thumb:#3a3a3c; --sb-hover:#545456;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--sb-track)}
+::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:8px;border:2px solid var(--sb-track)}
+::-webkit-scrollbar-thumb:hover{background:var(--sb-hover)}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:16.5px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+img{max-width:100%;display:block}
+h1,h2,h3{letter-spacing:-.02em;line-height:1.15;margin:0}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.sec{padding:clamp(44px,6vw,84px) 0;scroll-margin-top:calc(var(--nav-h) + 14px)}
+.sec--m2{background:var(--m2)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc,var(--accent));margin-bottom:12px}
+.kicker::before{content:"";width:22px;height:2px;background:var(--acc,var(--accent));border-radius:2px}
+.sec-title{font-size:clamp(24px,3.4vw,40px);font-weight:700}
+.sec-lead{color:var(--muted);margin-top:12px;max-width:760px;font-size:clamp(15px,1.5vw,17.5px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:980px;background:var(--surface-2);border:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 20px;border-radius:12px;border:1px solid transparent;background:var(--accent);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer;text-decoration:none;transition:transform .18s,opacity .18s,background .18s}
+.btn svg{width:16px;height:16px;flex:none}
+.btn:hover{opacity:.92;transform:translateY(-1px)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.tint{background:color-mix(in srgb,var(--acc,var(--accent)) 13%,transparent);color:var(--acc,var(--accent));border-color:color-mix(in srgb,var(--acc,var(--accent)) 30%,transparent)}
+.btn.tint:hover{background:color-mix(in srgb,var(--acc,var(--accent)) 20%,transparent);opacity:1}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+.btn.ghost:hover{color:var(--acc,var(--accent));border-color:var(--acc,var(--accent));opacity:1}
+.btn.sm{min-height:38px;padding:7px 14px;font-size:13.5px}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}}
+.progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:linear-gradient(90deg,var(--accent),var(--violet),var(--green));transition:width .1s linear}
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:50;height:var(--nav-h);background:var(--charcoal);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-in{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad);height:var(--nav-h);display:flex;align-items:center;gap:10px}
+.back{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.85);text-decoration:none;font-size:13.5px;font-weight:600;padding:8px 12px;border-radius:10px;min-height:40px;transition:all .18s;flex:none}
+.back:hover{color:#fff;background:rgba(255,255,255,.1)}
+.back svg{width:15px;height:15px}
+.brand{display:inline-flex;align-items:center;gap:9px;color:#fff;font-weight:700;font-size:14.5px;text-decoration:none;flex:none}
+.brand .bm{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#0b3ea8,#3f97f0)}
+.brand .bm svg{width:17px;height:17px}
+.nav-links{display:none;gap:2px;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.72);text-decoration:none;font-size:13.5px;font-weight:600;padding:9px 12px;border-radius:9px;min-height:40px;display:inline-flex;align-items:center;border-bottom:2px solid transparent}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-links a.active{color:#fff;border-bottom-color:var(--hero-acc);border-radius:0}
+@media (min-width:900px){.nav-links{display:flex}}
+.nav-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+@media (min-width:900px){.nav-links + .nav-actions{margin-left:6px}}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;flex:none;transition:transform .18s}
+.icon-btn:hover{transform:scale(1.06)}
+.icon-btn svg{width:18px;height:18px}
+/* ============ HERO ============ */
+.hero{position:relative;overflow:hidden;background:var(--charcoal);color:#fff;padding:clamp(44px,7vw,92px) 0 clamp(40px,6vw,72px)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(110% 90% at 82% 12%,rgba(77,163,255,.14),transparent 60%),radial-gradient(70% 70% at 8% 96%,rgba(137,68,171,.12),transparent 62%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(80% 80% at 70% 30%,#000,transparent 75%)}
+.hero .wrap{position:relative;z-index:1}
+.hero-grid{display:grid;gap:clamp(24px,4vw,52px);align-items:center}
+@media (min-width:960px){.hero-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}}
+.hero h1{font-size:clamp(30px,5vw,58px);font-weight:600;color:#fff;max-width:640px}
+.hero-sub{margin-top:14px;font-size:clamp(15px,1.7vw,19px);color:rgba(255,255,255,.7);line-height:1.5}
+.hero-sub span{display:block}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn.line{background:transparent;color:var(--hero-acc);border:1.5px solid var(--hero-acc)}
+.btn.line:hover{background:rgba(77,163,255,.14);opacity:1}
+.btn.dim{background:transparent;color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.35)}
+.btn.dim:hover{border-color:#fff;color:#fff;opacity:1}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.hero-chips .chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.85)}
+.mock{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#26242e;box-shadow:0 24px 60px rgba(0,0,0,.45);transform:rotate(1.2deg);transition:transform .5s}
+.mock:hover{transform:rotate(0deg) translateY(-4px)}
+.mock-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#1d1b24;border-bottom:1px solid rgba(255,255,255,.1)}
+.mock-bar i{width:9px;height:9px;border-radius:50%;background:#3a3a3c}
+.mock-bar i:first-child{background:#ff5f57}.mock-bar i:nth-child(2){background:#febc2e}.mock-bar i:nth-child(3){background:#28c840}
+.mock-bar span{margin-left:6px;font-size:11px;color:rgba(255,255,255,.5);font-family:ui-monospace,Menlo,Consolas,monospace}
+.mock-body{padding:16px}
+.mock-hero{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:#2f2d38;border-left:3px solid var(--mock-acc,#0a84ff)}
+.mock-hero .mi{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--mock-acc,#0a84ff) 22%,transparent);color:var(--mock-acc,#0a84ff)}
+.mock-hero .mi svg{width:20px;height:20px}
+.mock-hero b{display:block;font-size:14px;color:#fff}
+.mock-hero small{display:block;font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.mock-tabs{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
+.mock-tabs i{height:26px;border-radius:8px;background:#34323e;border:1px solid rgba(255,255,255,.1);flex:1;min-width:52px}
+.mock-tabs i.on{background:color-mix(in srgb,var(--mock-acc,#0a84ff) 26%,transparent);border-color:var(--mock-acc,#0a84ff)}
+.mock-cards{display:grid;gap:8px}
+.mock-cards i{height:44px;border-radius:10px;background:#2f2d38;border:1px solid rgba(255,255,255,.08);border-top:3px solid var(--mock-acc,#0a84ff)}
+.mock-cards i:nth-child(2){border-top-color:#30d158}
+.mock-cards i:nth-child(3){border-top-color:#bf5af2}
+/* ============ ШАГИ ============ */
+.phases{display:grid;gap:16px;margin-top:28px}
+@media (min-width:900px){.phases{grid-template-columns:1fr 1fr}}
+.phase{padding:clamp(18px,2.4vw,26px);border-top:4px solid var(--acc);display:flex;flex-direction:column;gap:14px}
+.phase-head{display:flex;align-items:center;gap:12px}
+.phase-head .pi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc)}
+.phase-head .pi svg{width:22px;height:22px}
+.phase-head h3{font-size:18px}
+.phase-head small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:st}
+.steps li{position:relative;padding-left:42px;counter-increment:st;color:var(--muted);font-size:14.5px;line-height:1.5}
+.steps li::before{content:counter(st);position:absolute;left:0;top:1px;width:27px;height:27px;border-radius:9px;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);font-weight:700;font-size:13px;display:grid;place-items:center}
+.steps li b{color:var(--text);font-weight:600}
+.repo-card{margin-top:16px;padding:18px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:14px;border-top:4px solid var(--teal)}
+.repo-card .ri{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal)}
+.repo-card .ri svg{width:22px;height:22px}
+.repo-card .rt{flex:1;min-width:220px}
+.repo-card .rt b{display:block;font-size:15.5px}
+.repo-card .rt small{display:block;color:var(--muted);font-size:13px;margin-top:2px;word-break:break-all}
+.repo-card .ra{display:flex;gap:8px;flex-wrap:wrap}
+/* ============ КОНСТРУКТОР ============ */
+.builder{display:grid;gap:18px;margin-top:28px}
+.panel{padding:clamp(18px,2.4vw,26px);display:grid;gap:18px;border-top:4px solid var(--violet)}
+.panel h3{font-size:17px;display:flex;align-items:center;gap:10px}
+.panel h3 .hi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--violet) 14%,transparent);color:var(--violet)}
+.panel h3 .hi svg{width:18px;height:18px}
+.sphere-tiles{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.stile{--sc:var(--accent);--ink:color-mix(in srgb,var(--sc) 74%,var(--text));display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-size:12.5px;font-weight:600;text-align:left;min-height:52px;transition:all .18s;line-height:1.25}
+.stile .si{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--sc) 15%,transparent);color:var(--ink)}
+.stile .si svg{width:16px;height:16px}
+.stile:hover{border-color:var(--sc);color:var(--text)}
+.stile.on{border-color:var(--sc);color:var(--ink);background:color-mix(in srgb,var(--sc) 10%,transparent);box-shadow:inset 0 -2px 0 var(--sc)}
+.reqcard{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--teal) 8%,var(--surface-2));border:1px dashed color-mix(in srgb,var(--teal) 45%,var(--line))}
+.reqcard .qi{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--teal) 16%,transparent);color:var(--teal)}
+.reqcard .qi svg{width:18px;height:18px}
+.reqcard b{font-size:14px;display:block}
+.reqcard p{font-size:13px;color:var(--muted);margin-top:3px}
+.reqcard a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;word-break:break-all;margin-top:6px}
+.reqcard a svg{width:14px;height:14px;flex:none}
+.toggles{display:grid;gap:8px}
+@media (min-width:700px){.toggles{grid-template-columns:1fr 1fr}}
+.tgl{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;min-height:46px}
+.tgl .tl{font-size:13.5px;font-weight:600;color:var(--text)}
+.tgl .ts{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.tgl input{position:absolute;opacity:0;pointer-events:none}
+.tgl .sw{width:42px;height:24px;border-radius:980px;background:var(--sb-thumb);position:relative;flex:none;transition:background .2s}
+.tgl .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tgl input:checked + .sw{background:var(--ok)}
+.tgl input:checked + .sw::after{left:21px}
+.tgl input:focus-visible + .sw{outline:3px solid var(--accent);outline-offset:2px}
+.tc-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tc-row .tl{font-size:14px;font-weight:600}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.stepper button{width:40px;height:40px;border:0;background:transparent;color:var(--acc,var(--accent));font-size:18px;font-weight:700;cursor:pointer;transition:background .15s}
+.stepper button:hover:not(:disabled){background:color-mix(in srgb,var(--acc,var(--accent)) 12%,transparent)}
+.stepper button:disabled{opacity:.35;cursor:not-allowed}
+.stepper .val{min-width:44px;text-align:center;font-weight:700;font-size:15px;color:var(--text);border-left:1px solid var(--line);border-right:1px solid var(--line);height:40px;line-height:40px}
+.tabs-editor{display:grid;gap:12px}
+.tabed{--sc:var(--violet);--ink:color-mix(in srgb,var(--sc) 74%,var(--text));border:1px solid var(--line);border-left:4px solid var(--sc);border-radius:14px;background:var(--surface-2);padding:14px 16px;display:grid;gap:12px}
+.tabed-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tabed-head .tn{font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.tabed-head .autochip{font-size:11px;padding:3px 9px;border-radius:980px;background:color-mix(in srgb,var(--sc) 14%,transparent);color:var(--ink);font-weight:700}
+.emo-group{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.emo{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:16px;line-height:1;display:grid;place-items:center;transition:all .15s}
+.emo:hover{border-color:var(--sc);transform:translateY(-1px)}
+.emo.on{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 14%,transparent);box-shadow:inset 0 -2px 0 var(--sc)}
+.tabed-grid{display:grid;gap:10px}
+@media (min-width:760px){.tabed-grid{grid-template-columns:minmax(0,1fr) auto}}
+.field label{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field input[type=text],.field textarea{width:100%;font:14px/1.55 inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.field textarea{min-height:76px;resize:vertical;font-family:inherit;scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
+.field input:focus,.field textarea:focus{outline:3px solid var(--accent);outline-offset:2px}
+.shot-field{display:grid;gap:6px;align-content:start}
+.shot-field .sl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.shot-field .hint{font-size:11.5px;color:var(--muted);max-width:190px}
+.preview{padding:clamp(18px,2.4vw,24px);display:grid;gap:14px;border-top:4px solid var(--accent)}
+.preview-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.preview-head h3{font-size:17px;flex:1}
+.preview-head .cnt{font-size:12px;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+.preview pre{margin:0;max-height:60vh;overflow:auto;padding:16px 18px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--text);scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
+.preview-actions{display:flex;gap:8px;flex-wrap:wrap}
+.stage2{padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--green) 8%,var(--surface-2));border:1px dashed color-mix(in srgb,var(--green) 45%,var(--line));display:grid;gap:10px}
+.stage2 b{font-size:13.5px;color:var(--green)}
+.stage2 pre{margin:0;max-height:120px;overflow:auto;font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--muted)}
+/* ============ ПУБЛИКАЦИЯ ============ */
+.pub{display:grid;gap:16px;margin-top:28px}
+@media (min-width:900px){.pub{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
+.pub-steps{padding:clamp(18px,2.4vw,26px);border-top:4px solid var(--green)}
+.pub-side{display:grid;gap:16px;align-content:start}
+.linkcard{padding:20px;display:flex;gap:14px;align-items:flex-start;border-top:4px solid var(--teal)}
+.linkcard .li{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal)}
+.linkcard .li svg{width:22px;height:22px}
+.linkcard b{display:block;font-size:15.5px}
+.linkcard p{color:var(--muted);font-size:13.5px;margin-top:4px}
+.linkcard .btn{margin-top:12px}
+/* ============ ЧЕК-ЛИСТ ============ */
+.check-wrap{margin-top:28px;display:grid;gap:16px}
+@media (min-width:900px){.check-wrap{grid-template-columns:minmax(0,1fr) 300px}}
+.checklist{padding:clamp(18px,2.4vw,26px);border-top:4px solid var(--acc);display:grid;gap:10px}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;transition:all .18s}
+.chk:hover{border-color:color-mix(in srgb,var(--acc) 50%,var(--line))}
+.chk input{position:absolute;opacity:0;pointer-events:none}
+.chk .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--sb-thumb);flex:none;display:grid;place-items:center;color:#fff;transition:all .18s;margin-top:1px}
+.chk .box svg{width:13px;height:13px;opacity:0;transform:scale(.6);transition:all .18s}
+.chk input:checked ~ .box{background:var(--acc);border-color:var(--acc)}
+.chk input:checked ~ .box svg{opacity:1;transform:scale(1)}
+.chk input:focus-visible ~ .box{outline:3px solid var(--accent);outline-offset:2px}
+.chk .ct{font-size:14px;color:var(--muted);line-height:1.5}
+.chk input:checked ~ .ct{color:var(--text)}
+.check-side{padding:22px;display:grid;gap:14px;align-content:start;border-top:4px solid var(--acc)}
+@media (min-width:900px){.check-side{position:sticky;top:calc(var(--nav-h) + 16px)}}
+.check-side .ring{font-size:34px;font-weight:700;color:var(--acc)}
+.check-side .bar{height:10px;border-radius:980px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.check-side .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--ok));transition:width .4s}
+.check-side p{color:var(--muted);font-size:13.5px}
+/* ============ FOOTER ============ */
+.footer{background:var(--charcoal);color:#fff;padding:clamp(32px,5vw,56px) 0}
+.footer-in{display:grid;gap:16px;justify-items:center;text-align:center}
+.f-link{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);text-decoration:none;font-size:14px;font-weight:600;min-height:42px}
+.f-link:hover{color:#fff;border-color:#fff}
+.f-link svg{width:15px;height:15px}
+.f-copy{color:rgba(255,255,255,.55);font-size:14px;line-height:1.6}
+.f-copy span{display:inline}
+@media (max-width:700px){.f-copy span{display:block}.f-copy .f-sep{display:none}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:300;padding:12px 22px;border-radius:12px;background:var(--charcoal);color:#fff;border:1px solid rgba(255,255,255,.18);font-size:14.5px;font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div id="app"></div>
+
+<script>
+"use strict";
+const MAIN_URL="https://mmmaslikov.github.io/point-ai/";
+const SAMPLE_URL="https://mmmaslikov.github.io/mift/";
+const REPO_URL="https://github.com/mmmaslikov/mift/blob/main/index.html";
+const RAW_URL="https://raw.githubusercontent.com/mmmaslikov/mift/main/index.html";
+const MC_URL="https://mmmaslikov.github.io/tpg_mc2/";
+const QWEN_URL="https://chat.qwen.ai/";
+const REQ_URL="https://mmmaslikov.github.io/tpg/#stage7";
+
+const ICONS={
+  dev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>',
+  pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M8 20h8M12 6l6 2-6-2-6 2 6-2z"/><path d="M6 8l-3 6a3.2 3.2 0 0 0 6 0zM18 8l-3 6a3.2 3.2 0 0 0 6 0z"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a13.5 13.5 0 0 1 0 18 13.5 13.5 0 0 1 0-18z"/></svg>',
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1"/></svg>',
+  brain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>',
+  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.6"/><circle cx="18" cy="5" r="2.6"/><path d="M8.6 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.4"/></svg>',
+  sparkles:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4M19 17v4M3 5h4M17 19h4"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 1 1 12 6.3a5 5 0 1 1 7.5 6.3Z"/></svg>',
+  briefcase:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M19.4 4.6l-1.7 1.7M6.3 17.7l-1.7 1.7"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 14.2A8.6 8.6 0 0 1 9.8 3.4a8.6 8.6 0 1 0 10.8 10.8z"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
+  bot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4.5M9 13h.01M15 13h.01M9.5 16h5"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>',
+  code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>',
+  layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  rocket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1 3-1 5-1 5s2 0 5-1"/><path d="M9 15l-3-3c1-5 5-9 12-9 0 7-4 11-9 12z"/><circle cx="14" cy="10" r="1.6"/></svg>',
+  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2 6"/><path d="M20 5v6h-6"/></svg>',
+  git:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
+  compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-4 1 2-5z"/></svg>'
+};
+
+const EMOJIS=["🚦","🎯","🌐","📚","🎮","🏆","🧰","🧩","🎬","🎓","🤝","📖","📊","📄","📈","🧭","🎉","🔬","🎨"];
+
+/* Цвета сфер — ровно как на главной странице каталога */
+const SPHERES=[
+  {id:"math",title:"Математика, информатика, физика и труд",full:"МО математики, информатики, физики и труда",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Масликов Михаил",icon:"dev",color:"#0a84ff",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для разноуровневых задач с автопроверкой, контрольных с вариантами и адаптации материалов под уровни.",services:"Qwen — генерация кода и промтов; DeepSeek — анализ результатов.",shots:0},
+         {name:"Сайты и публикация",emo:"🌐",content:"Конвейер «тема → промт → код → файл → проверка»: мастер-класс «Сайт за час» и инструкция по GitHub Pages.",services:"GitHub Pages; GitVerse; мастер-класс tpg_mc2.",shots:1},
+         {name:"Тренажёры и игры",emo:"🎮",content:"Python-тренажёр с автопроверкой, «Своя игра» для обобщения темы, промт для собственного тренажёра.",services:"Python-тренажёр; «Своя игра» (6 класс).",shots:2}]},
+  {id:"rus",title:"Русский язык и литература",full:"МО русского языка и литературы",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Нелепова Светлана",icon:"pen",color:"#ff375f",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для сочинений, проверки орфографии и пунктуации, разбора литературных текстов.",services:"Qwen — промты; Gamma — презентации к урокам.",shots:0},
+         {name:"Уроки и материалы",emo:"📚",content:"Готовые презентации и рабочие листы по литературе и русскому языку.",services:"Gamma; библиотека рабочих листов МО.",shots:2},
+         {name:"ЕГЭ, ОГЭ и ВПР",emo:"🏆",content:"Генерация вариантов и анализ типовых ошибок; ссылка на кабинет подготовки.",services:"Кабинет подготовки к ЕГЭ и ОГЭ.",shots:1}]},
+  {id:"soc",title:"Общественные и естественно-научные дисциплины",full:"МО общественных и естественно-научных дисциплин",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Еронько Ася",icon:"scale",color:"#ff9f0a",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для обществоведческих кейсов, работы с историческими документами и правовыми текстами.",services:"Qwen; DeepSeek — разбор больших документов.",shots:0},
+         {name:"Уроки и кейсы",emo:"📚",content:"Инфографика, хронологические ленты и практические кейсы по истории и обществознанию.",services:"Gamma — инфографика и схемы.",shots:2},
+         {name:"ЕГЭ и ОГЭ",emo:"🏆",content:"Задания по диаграммам и графикам, генерация вариантов в формате экзамена.",services:"Кабинет подготовки; банк диаграмм.",shots:1}]},
+  {id:"lang",title:"Иностранные языки",full:"МО иностранных языков",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Денисов Егор, Шигарова Ирина",icon:"globe",color:"#30d158",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для упражнений по грамматике и лексике, адаптации аутентичных текстов под уровни A1–C2.",services:"Qwen; GigaChat — русскоязычные пояснения.",shots:0},
+         {name:"Уроки и материалы",emo:"📚",content:"Рабочие листы и lesson plans с таймингом; скриншоты готовых материалов.",services:"Gamma; банк рабочих листов МО.",shots:2},
+         {name:"Аудио, видео, квизы",emo:"🎬",content:"Аудирование и диалоги, игровые квизы для повторения лексики.",services:"Генераторы аудио; квиз-платформы.",shots:1}]},
+  {id:"sport",title:"Физическое воспитание и спорт",full:"Отдел физического воспитания и спорта",sub0:"Отдел физического воспитания и спорта ЧОУ «Точка будущего»",head:"Максимова Валентина",icon:"target",color:"#ff453a",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для планов тренировок разноуровневых и сменных групп, сценариев соревнований.",services:"Qwen — планы и сценарии.",shots:0},
+         {name:"События и сценарии",emo:"🎉",content:"Сценарии спортивных праздников и дней здоровья, афиши и поздравления.",services:"Шедеврум — афиши; Gamma — презентации событий.",shots:2},
+         {name:"Мониторинг и планы",emo:"📊",content:"Оцифровка нормативов и аналитические отчёты по физподготовленности.",services:"DeepSeek — анализ таблиц нормативов.",shots:1}]},
+  {id:"psy",title:"Социально-психологическая служба",full:"Социально-психологическая служба",sub0:"Социально-психологическая служба ЧОУ «Точка будущего»",head:"Тимофеев Семён, Ильина Александра",icon:"brain",color:"#bf5af2",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для анализа анонимных диагностик и консолидации отчётов рабочих групп; запрет на ФИО и диагнозы.",services:"DeepSeek — обезличенные таблицы.",shots:0},
+         {name:"Диагностика и отчёты",emo:"📊",content:"Обработка диагностических бланков по обезличенным кодам, наглядные отчёты.",services:"DeepSeek; шаблоны отчётов СПС.",shots:1},
+         {name:"Занятия и памятки",emo:"🤝",content:"Сценарии коррекционных занятий и памятки родителям и педагогам.",services:"Qwen — сценарии и памятки.",shots:0}]},
+  {id:"tutor",title:"Тьюторская поддержка",full:"Служба тьюторской поддержки",sub0:"Служба тьюторской поддержки ЧОУ «Точка будущего»",head:"Гармышева Анастасия",icon:"route",color:"#5e5ce6",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для персональных маршрутов, отчётов о динамике и профориентационных гипотез.",services:"Qwen — маршруты и отчёты.",shots:0},
+         {name:"Маршруты и динамика",emo:"🧭",content:"Индивидуальные образовательные маршруты и карты интересов ученика.",services:"Шаблоны маршрутов; карты интересов.",shots:1},
+         {name:"Профориентация",emo:"🎓",content:"Подбор вузов и ссузов, материалы для разговора с родителями.",services:"Базы вузов и ссузов; профтесты.",shots:0}]},
+  {id:"upbr",title:"Воспитательная работа",full:"Отдел по воспитательной работе",sub0:"Отдел по воспитательной работе ЧОУ «Точка будущего»",head:"Истомин Вадим",icon:"sparkles",color:"#ffd60a",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для сценариев классных часов, постов и официальных сообщений, характеристик.",services:"Qwen — тексты и сценарии.",shots:0},
+         {name:"События и классные часы",emo:"🎉",content:"Сценарии мероприятий и часов общения, презентации и моушн-идеи.",services:"Gamma; Шедеврум — афиши событий.",shots:2},
+         {name:"Тексты и аналитика",emo:"📄",content:"Аналитика собраний по диктофонной записи без ФИО, отчёты и характеристики.",services:"DeepSeek — расшифровки и аналитика.",shots:0}]},
+  {id:"inkl",title:"Инклюзивное образование",full:"Служба сопровождения инклюзивного образования",sub0:"Служба сопровождения инклюзивного образования ЧОУ «Точка будущего»",head:"Абрамова Валерия",icon:"heart",color:"#64d2ff",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для адаптации заданий и планирования коррекционной работы; запрет на диагнозы и ФИО.",services:"Qwen — адаптация материалов.",shots:0},
+         {name:"Адаптация материалов",emo:"🧩",content:"Адаптированные задания и визуальная поддержка под индивидуальные потребности.",services:"Банк адаптированных заданий.",shots:1},
+         {name:"Наглядность и документация",emo:"🗂",content:"Рабочие листы, речевой материал для подростков, профессиональная документация.",services:"Шедеврум — наглядность; шаблоны документации.",shots:2}]},
+  {id:"admin",title:"Административно-управленческий персонал",full:"Административно-управленческий персонал",sub0:"Административно-управленческий персонал ЧОУ «Точка будущего»",head:"Никулин Егор",icon:"briefcase",color:"#30b0c7",
+   seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для приказов, распоряжений и протоколов по шаблону, конспектов совещаний.",services:"Qwen — документы по шаблону.",shots:0},
+         {name:"Документооборот",emo:"📄",content:"Шаблоны документов и официальных ответов, программы развития.",services:"Банк шаблонов документов.",shots:0},
+         {name:"Совещания и аналитика",emo:"📊",content:"Конспекты совещаний с решениями и сроками, аналитика образовательных показателей.",services:"DeepSeek — аналитика показателей.",shots:1}]}
+];
+
+const CHECKS=[
+  "Страница открывается локально и по ссылке публикации, консоль браузера без ошибок.",
+  "Шапка: значок вашей сферы, подзаголовок в две строки, цвет шапки из вашего блока.",
+  "Вкладки и их названия — ваши; на мобильных переносятся, при переключении контент показывается с начала.",
+  "Одна вкладка — один цвет; скриншоты увеличиваются по центру, окно облегает изображение.",
+  "Ссылка возврата на главную «Точка ИИ» работает и открывает её в том же окне."
+];
+
+const FORMAT=`{icon:"ключ из ICONS", title:"Название", desc:"Описание.",
+ steps:["шаг 1","шаг 2"],                       // нумерованный алгоритм
+ terms:[["Термин","Определение"]],              // мини-словарь
+ links:[{label:"Текст",url:"https://…"}],       // внешние ссылки
+ links:[{label:"Текст",url:"…",same:true}],     // ссылка в том же окне
+ prompt:"Полный текст промта…",                 // аккордеон
+ shots:[{file:"shot-…-1.png",cap:"Подпись"}]}   // скриншоты`;
+
+const RULES=[
+  "1. НЕ переписывай движок. Весь CSS и все JS-функции (renderApp, cardBlock, consBlock, switchTab, лайтбокс, копирование промтов, переключение темы, прокрутка к началу вкладки, заглушки скриншотов) оставь без изменений. Меняй ТОЛЬКО: константы MO, TABS, CONTENT, при необходимости CONS, комментарий со списком скриншотов сверху, <title> и meta description, и значение --hero-acc (указано в блоке сферы).",
+  "2. Дизайн не менять: фон #f2f2f2 (тёмная тема #161616), угольная шапка БЕЗ градиента, подзаголовок шапки в две строки, карточки с цветной полосой сверху, вкладки-плитки (на мобильных переносятся, не уезжают за экран), описание вкладки по ширине карточек и выключено по формату, лайтбокс облегает изображение и центрирован на мобильных, футер без заголовка, копирайт на мобильных в две строки.",
+  "3. Одна вкладка = один цвет: все карточки внутри наследуют цвет вкладки. Палитру PAL не менять и не добавлять новые цвета.",
+  "4. Оформление текста (жирный, капс, списки) — на твоё усмотрение: используй, если это помогает читаемости, но держи единый аккуратный стиль.",
+  "5. Ссылки: внешние сервисы открывай в новом окне; ссылки на главную «Точка ИИ» и любые внутренние якоря — в том же окне (поле same:true у ссылки).",
+  "6. Скриншоты: в брифе указано только КОЛИЧЕСТВО картинок на вкладку. Для каждой сам придумай имя файла вида shot-<сфера>-N.png и подпись, подключи через shots:[{file,cap}]. В конце ответа отдельным списком перечисли, какие файлы с какими именами куда положить (папка images/ рядом с index.html), чтобы я их загрузил. Сами изображения не выдумывай: пока файл не загружен, страница покажет заглушку с его именем.",
+  "7. Промты — по желанию. Если они есть, делай их развёрнутыми техзаданиями (роль, нумерованная структура результата, требования, что добавить в конце), прячь под кнопку «Показать промт», рядом кнопки «Скопировать» и «Открыть в Qwen».",
+  "8. Конструктор промтов — по желанию. Если он нужен, адаптируй CONS под мой предмет (списки subjects, formats, outputs). Если не нужен — удали вызов consBlock() и сам блок, остальное не трогай.",
+  "9. Вкладки: количество, названия, emoji и состав карточек — из моего брифа. Наполнение каждой вкладки ориентируй на запросы моей сферы из раздела «Применение ИИ по сферам» ("+REQ_URL+"): закрой каждый запрос хотя бы одной карточкой, алгоритмом или промтом. Сервисы и ссылки, указанные у вкладки, размести карточками именно в этой вкладке.",
+  "10. Ответ выдай ОДНИМ полным файлом index.html, без пояснений до кода; после кода — список файлов скриншотов и куда их положить."
+];
+
+const STAGE2_MSG="Я переключился в режим «Артефакты» / «Веб-разработка» и прикрепил index.html из репозитория. План согласован. Собирай страницу по плану одним полным файлом index.html, соблюдая правила из первого сообщения.";
+
+const state={sphere:"math",tabs:[],cons:true,start:true,theme:"auto",checks:[false,false,false,false,false]};
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sphere=()=>SPHERES.find(s=>s.id===state.sphere)||SPHERES[0];
+const seedTabs=s=>s.seed.map(t=>({...t}));
+function startTab(s){
+  return {start:true,name:"С чего начать",emo:"🚦",shots:0,services:"Главная «Точка ИИ» — раздел «Безопасность» (в том же окне).",
+    content:"Тёплое введение для тех, кто впервые открывает нейросеть: короткое описание сферы «"+s.full+"» и задач, которые она закрывает; мини-словарь из пяти слов (нейросеть, чат-бот, промт, генерация, сервис); три правила хорошей просьбы (кто вы и для кого, что именно сделать, пример или ограничение); три «нельзя» по безопасности — без ФИО, оценок, фото и диагнозов учеников, публикация только с согласия родителей, результат проверяет человек; кнопка-ссылка на раздел «Безопасность» главной страницы."};
+}
+function rebuildTabs(){
+  const s=sphere();
+  state.tabs=(state.start?[startTab(s)]:[]).concat(seedTabs(s));
+  if(state.tabs.length>6)state.tabs=state.tabs.slice(0,6);
+  if(state.tabs.length<2)state.tabs.push({name:"Новая вкладка",emo:"📚",content:"",services:"",shots:0});
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2400);}
+async function copyText(txt,msg){
+  try{await navigator.clipboard.writeText(txt);toast(msg||"Скопировано");}
+  catch(e){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");toast(msg||"Скопировано");}catch(err){toast("Скопируйте вручную из поля ниже");}
+    document.body.removeChild(ta);}
+}
+function blockText(s){
+  return [`const MO={title:"${s.title}",`,`  sub:["${s.sub0}","Страница каталога «Точка ИИ»"],`,`  head:"${s.head}",icon:"${s.icon}"};`,`/* --hero-acc: ${s.color} */`,`${s.icon}:'${ICONS[s.icon]}',`].join("\n");
+}
+function briefText(){
+  const s=sphere();const L=[];
+  L.push("Сфера: "+s.full);
+  L.push("Куратор(ы): "+s.head);
+  L.push("Количество вкладок: "+state.tabs.length);
+  state.tabs.forEach((t,i)=>{
+    L.push("Вкладка "+(i+1)+": «"+(t.name.trim()||"без названия")+"» "+t.emo+(t.start?" (стартовая)":""));
+    L.push("  Содержание: "+(t.content.trim()||"не заполнено — предложи сам, опираясь на запросы сферы"));
+    L.push("  Сервисы и ссылки этой вкладки: "+(t.services.trim()||"не указаны — предложи подходящие сам"));
+    L.push("  Скриншоты/картинки: "+t.shots+" шт. — имена файлов и подписи придумай сам (shot-"+s.id+"-N.png), в конце перечисли, куда их положить");
+  });
+  L.push("Конструктор промтов: "+(state.cons?"нужен":"не нужен"));
+  return L.join("\n");
+}
+function buildPrompt(){
+  const s=sphere();const L=[];
+  L.push("Ты — senior frontend-разработчик и методист. Мы собираем страницу МОЕЙ сферы для каталога «Точка ИИ» (живой образец: "+SAMPLE_URL+").");
+  L.push("Движок страницы — файл index.html из репозитория: "+REPO_URL+" (на этапе сборки я скачаю и прикреплю его к сообщению).");
+  L.push("");
+  L.push("ЭТАП 1 — ОБСУЖДЕНИЕ (сейчас):");
+  L.push("- Не пиши код и не создавай артефакт. Разбери мой бриф и блок сферы, предложи план страницы: вкладки, состав карточек, какие промты и скриншоты нужны.");
+  L.push("- Ориентир наполнения — запросы моей сферы из раздела «Применение ИИ по сферам»: "+REQ_URL+". Покажи, какой запрос закрывает каждая вкладка и карточка.");
+  L.push("- Если брифа не хватает — задай не более 7 уточняющих вопросов (темы, сервисы, ссылки, количество скриншотов, нужен ли конструктор) и дождись ответов.");
+  L.push("- Согласуй со мной план и дождись команды «Собирай».");
+  L.push("");
+  L.push("ЭТАП 2 — СБОРКА (после команды «Собирай», в режиме артефактов с прикреплённым index.html):");
+  L.push("ПРАВИЛА:");
+  RULES.forEach(r=>L.push(r));
+  L.push("");
+  L.push("ФОРМАТ ДАННЫХ (карточка может сочетать любые поля):");
+  L.push(FORMAT);
+  L.push("");
+  L.push("БЛОК МОЕЙ СФЕРЫ (вставь как есть; строку со значком добавь внутрь объекта ICONS):");
+  L.push(blockText(s));
+  L.push("");
+  L.push("МОЙ БРИФ НАПОЛНЕНИЯ:");
+  L.push(briefText());
+  return L.join("\n");
+}
+
+function renderApp(){
+  const s=sphere();
+  $("#app").innerHTML=`
+  <header class="nav"><div class="nav-in">
+    <a class="back" href="${MAIN_URL}">${ICONS.left} Точка ИИ</a>
+    <a class="brand" href="#top"><span class="bm">${ICONS.spark}</span>Инструкция ТПГ</a>
+    <nav class="nav-links" aria-label="Разделы инструкции">
+      <a href="#how" data-spy="how">Как работаем</a>
+      <a href="#builder" data-spy="builder">Конструктор промта</a>
+      <a href="#publish" data-spy="publish">Публикация</a>
+      <a href="#check" data-spy="check">Чек-лист</a>
+    </nav>
+    <div class="nav-actions"><button class="icon-btn" id="theme-btn" type="button" aria-label="Переключить тему"></button></div>
+  </div></header>
+  <main id="top">
+  <section class="hero"><div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="kicker" style="--acc:var(--hero-acc)">ТПГ «ГенИИ» · инструкция</span>
+        <h1>Страница вашей сферы в каталоге «Точка ИИ»</h1>
+        <p class="hero-sub"><span>Соберите промт, обсудите план с Qwen,</span><span>затем соберите и опубликуйте страницу своей сферы.</span></p>
+        <div class="hero-cta">
+          <a class="btn line" href="#builder">${ICONS.spark} Собрать промт</a>
+          <button class="btn dim" type="button" id="hero-dl">${ICONS.download} Скачать index.html</button>
+          <a class="btn dim" href="${MC_URL}" target="_blank" rel="noopener">Мастер-класс публикации ${ICONS.ext}</a>
+        </div>
+        <div class="hero-chips">
+          <span class="chip">10 сфер · 10 страниц</span>
+          <span class="chip">2 этапа: обсуждение → сборка</span>
+          <span class="chip">ориентир — запросы сферы</span>
+        </div>
+      </div>
+      <div class="mock rv" id="mock" style="--mock-acc:${s.color}" aria-hidden="true">
+        <div class="mock-bar"><i></i><i></i><i></i><span>sphere-page · index.html</span></div>
+        <div class="mock-body">
+          <div class="mock-hero"><span class="mi">${ICONS[s.icon]}</span><span><b>${esc(s.title)}</b><small>${esc(s.sub0)}</small></span></div>
+          <div class="mock-tabs"><i class="on"></i><i></i><i></i><i></i></div>
+          <div class="mock-cards"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec" id="how" style="--acc:var(--accent)"><div class="wrap">
+    <span class="kicker">Шаг за шагом</span>
+    <h2 class="sec-title">Как работаем: сначала обсуждение, потом сборка</h2>
+    <p class="sec-lead">Движок страницы уже готов — файл index.html из репозитория куратора. Всё ваше наполнение задаётся промтом: сначала обсуждаете план с Qwen в обычном чате, и только потом переключаетесь в режим артефактов и собираете сайт.</p>
+    <div class="phases">
+      <article class="card phase rv" style="--acc:var(--accent)">
+        <div class="phase-head"><span class="pi">${ICONS.chat}</span><span><h3>Этап 1 · Обсуждение</h3><small>обычный режим чата Qwen</small></span></div>
+        <ol class="steps">
+          <li><b>Скачайте index.html</b> из репозитория куратора (кнопка ниже). Вручную не редактируйте.</li>
+          <li>Откройте <b>Qwen</b> в обычном режиме чата.</li>
+          <li>Соберите промт в <b>конструкторе</b> ниже и отправьте его целиком.</li>
+          <li>Обсудите план: вкладки, карточки, промты, количество скриншотов. Ответьте на вопросы и согласуйте план.</li>
+        </ol>
+      </article>
+      <article class="card phase rv" style="--acc:var(--violet)">
+        <div class="phase-head"><span class="pi">${ICONS.code}</span><span><h3>Этап 2 · Сборка и публикация</h3><small>режим «Артефакты» / «Веб-разработка»</small></span></div>
+        <ol class="steps">
+          <li>Переключитесь в режим <b>«Артефакты» / «Веб-разработка»</b>, прикрепите index.html и отправьте сообщение этапа 2.</li>
+          <li>Смотрите <b>предпросмотр</b>, правьте итерациями. Движок и дизайн не трогайте.</li>
+          <li>Скопируйте итоговый код, сохраните как <b>index.html</b>, загрузите скриншоты в папку images/ и опубликуйте по мастер-классу.</li>
+          <li>Пришлите <b>куратору ссылку</b> — страница появится в общем каталоге.</li>
+        </ol>
+      </article>
+    </div>
+    <div class="card repo-card rv">
+      <span class="ri">${ICONS.git}</span>
+      <span class="rt"><b>Движок страницы: index.html</b><small>github.com/mmmaslikov/mift/blob/main/index.html</small></span>
+      <span class="ra">
+        <button class="btn tint" style="--acc:var(--teal)" type="button" id="repo-dl">${ICONS.download} Скачать файл</button>
+        <a class="btn ghost" href="${REPO_URL}" target="_blank" rel="noopener">Открыть на GitHub ${ICONS.ext}</a>
+      </span>
+    </div>
+  </div></section>
+
+  <section class="sec sec--m2" id="builder" style="--acc:var(--violet)"><div class="wrap">
+    <span class="kicker">Главный инструмент</span>
+    <h2 class="sec-title">Конструктор промта</h2>
+    <p class="sec-lead">Выберите сферу, задайте вкладки и их наполнение — промт ниже собирается сам. Скопируйте его и отправьте в Qwen для обсуждения плана.</p>
+    <div class="builder">
+      <div class="card panel">
+        <h3><span class="hi">${ICONS.layers}</span>1 · Ваша сфера</h3>
+        <div class="sphere-tiles" id="tiles" role="group" aria-label="Выбор сферы"></div>
+        <div class="reqcard">
+          <span class="qi">${ICONS.compass}</span>
+          <span><b>Ориентир наполнения — запросы вашей сферы</b>
+          <p>Вкладки и карточки должны закрывать запросы, которые ваша сфера сформулировала на первом этапе ТПГ. Они перечислены в разделе «Применение ИИ по сферам».</p>
+          <a href="${REQ_URL}" target="_blank" rel="noopener">mmmaslikov.github.io/tpg/#stage7 ${ICONS.ext}</a></span>
+        </div>
+        <h3><span class="hi">${ICONS.spark}</span>2 · Параметры страницы</h3>
+        <div class="toggles">
+          <label class="tgl"><span><span class="tl">Конструктор промтов</span><span class="ts">адаптировать CONS под ваш предмет</span></span><input type="checkbox" id="tg-cons" ${state.cons?"checked":""}><span class="sw"></span></label>
+          <label class="tgl"><span><span class="tl">Вкладка «С чего начать»</span><span class="ts">введение, словарь и безопасность — первой</span></span><input type="checkbox" id="tg-start" ${state.start?"checked":""}><span class="sw"></span></label>
+        </div>
+        <h3><span class="hi">${ICONS.list}</span>3 · Вкладки и наполнение</h3>
+        <div class="tc-row">
+          <span class="tl">Количество вкладок</span>
+          <span class="stepper" style="--acc:var(--violet)">
+            <button type="button" id="tc-dec" aria-label="Меньше вкладок">−</button>
+            <span class="val" id="tc-val">4</span>
+            <button type="button" id="tc-inc" aria-label="Больше вкладок">+</button>
+          </span>
+          <span class="chip">от 2 до 6</span>
+        </div>
+        <div class="tabs-editor" id="tabs"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn tint sm" style="--acc:var(--violet)" type="button" id="brief-reseed">${ICONS.refresh} Вернуть образец наполнения</button>
+        </div>
+      </div>
+      <div class="card preview">
+        <div class="preview-head"><h3>Готовый промт</h3><span class="cnt" id="cnt"></span></div>
+        <pre id="prompt-out" tabindex="0" aria-label="Собранный промт"></pre>
+        <div class="preview-actions">
+          <button class="btn" type="button" id="copy-prompt">${ICONS.copy} Скопировать промт</button>
+          <a class="btn tint" style="--acc:var(--accent)" href="${QWEN_URL}" target="_blank" rel="noopener">${ICONS.bot} Открыть Qwen ${ICONS.ext}</a>
+          <button class="btn ghost" type="button" id="reset-all">${ICONS.refresh} Сбросить</button>
+        </div>
+        <div class="stage2">
+          <b>Сообщение для этапа 2 (после согласования плана)</b>
+          <pre id="stage2-out">${esc(STAGE2_MSG)}</pre>
+          <div><button class="btn tint sm" style="--acc:var(--green)" type="button" id="copy-stage2">${ICONS.copy} Скопировать сообщение этапа 2</button></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec" id="publish" style="--acc:var(--green)"><div class="wrap">
+    <span class="kicker">Финал</span>
+    <h2 class="sec-title">Публикация по мастер-классу</h2>
+    <p class="sec-lead">Полная инструкция с картинками — в мастер-классе «Создаём и публикуем сайт за 1 час». Коротко:</p>
+    <div class="pub">
+      <article class="card pub-steps rv">
+        <ol class="steps">
+          <li>Скопируйте итоговый код из Qwen.</li>
+          <li>Создайте публичный репозиторий на GitHub с именем латиницей, например <b>sphere-psy</b>.</li>
+          <li>Создайте файл <b>index.html</b>, вставьте код и сделайте Commit.</li>
+          <li>Загрузите скриншоты в папку <b>images/</b> рядом с index.html (имена подскажет Qwen).</li>
+          <li>Включите Pages: <b>Settings → Pages → ветка main → Save</b>.</li>
+          <li>Через 2–3 минуты страница доступна по ссылке вида <b>ник.github.io/репозиторий/</b>. Пришлите её куратору.</li>
+        </ol>
+      </article>
+      <div class="pub-side">
+        <article class="card linkcard rv">
+          <span class="li">${ICONS.rocket}</span>
+          <span><b>Мастер-класс «Сайт за час»</b><p>Пошаговая публикация на GitHub Pages и GitVerse: репозиторий, файл, Pages, ссылка и QR-код.</p>
+          <a class="btn tint" style="--acc:var(--teal)" href="${MC_URL}" target="_blank" rel="noopener">Открыть мастер-класс ${ICONS.ext}</a></span>
+        </article>
+        <article class="card linkcard rv" style="--acc:var(--accent)">
+          <span class="li">${ICONS.shield}</span>
+          <span><b>Безопасность прежде всего</b><p>Никаких ФИО, оценок, фото и диагнозов учеников в промтах и на странице. Только обезличенные примеры и коды.</p>
+          <a class="btn tint" style="--acc:var(--accent)" href="${MAIN_URL}#safety">Раздел «Безопасность» ${ICONS.ext}</a></span>
+        </article>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec sec--m2" id="check" style="--acc:var(--teal)"><div class="wrap">
+    <span class="kicker">Перед отправкой</span>
+    <h2 class="sec-title">Чек-лист куратору</h2>
+    <p class="sec-lead">Отмечайте пункты по мере проверки — прогресс сохраняется в браузере.</p>
+    <div class="check-wrap">
+      <div class="card checklist" id="checklist"></div>
+      <aside class="card check-side">
+        <span class="ring" id="check-ring">0 / 5</span>
+        <div class="bar"><i id="check-bar"></i></div>
+        <p id="check-note">Пройдите все пункты перед отправкой ссылки куратору.</p>
+        <button class="btn ghost sm" type="button" id="check-reset">${ICONS.refresh} Сбросить отметки</button>
+      </aside>
+    </div>
+  </div></section>
+  </main>
+  <footer class="footer"><div class="wrap footer-in">
+    <a class="f-link" href="${MAIN_URL}">${ICONS.left} Вернуться в «Точку ИИ»</a>
+    <p class="f-copy"><span>Вопросы и готовые ссылки — куратору ТПГ: Масликов Михаил Михайлович</span><span class="f-sep"> · </span><span>ЧОУ «Точка будущего»</span></p>
+    <p class="f-copy"><span>© 2026 ТПГ «ГенИИ»</span><span class="f-sep"> · </span><span>Каталог «Точка ИИ»</span></p>
+  </div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
+  renderTiles();renderTabs();renderChecklist();
+  updatePrompt();updateChecks();applyTheme();
+}
+function renderTiles(){
+  $("#tiles").innerHTML=SPHERES.map(s=>`
+    <button class="stile${s.id===state.sphere?" on":""}" type="button" data-sphere="${s.id}" style="--sc:${s.color}" aria-pressed="${s.id===state.sphere}">
+      <span class="si">${ICONS[s.icon]}</span>${esc(s.title)}
+    </button>`).join("");
+}
+function renderTabs(){
+  const sc=sphere().color;
+  $("#tc-val").textContent=state.tabs.length;
+  $("#tc-dec").disabled=state.tabs.length<=2;
+  $("#tc-inc").disabled=state.tabs.length>=6;
+  $("#tabs").innerHTML=state.tabs.map((t,i)=>`
+    <div class="tabed" data-tab="${i}" style="--sc:${sc}">
+      <div class="tabed-head">
+        <span class="tn">Вкладка ${i+1}</span>
+        ${t.start?'<span class="autochip">стартовая</span>':""}
+        <span class="emo-group" role="group" aria-label="Эмодзи вкладки ${i+1}">
+          ${EMOJIS.map(e=>`<button class="emo${t.emo===e?" on":""}" type="button" data-emo="${e}" aria-pressed="${t.emo===e}" title="${e}">${e}</button>`).join("")}
+        </span>
+      </div>
+      <div class="tabed-grid">
+        <div class="field">
+          <label for="tn-${i}">Название вкладки</label>
+          <input type="text" id="tn-${i}" data-tname="${i}" value="${esc(t.name)}" placeholder="Например: Промты и сервисы">
+          <label for="tc-${i}" style="margin-top:10px">Что внутри</label>
+          <textarea id="tc-${i}" data-tcontent="${i}" placeholder="Карточки, алгоритмы, промты, ссылки — что показать на этой вкладке…">${esc(t.content)}</textarea>
+          <label for="ts-${i}" style="margin-top:10px">Мои сервисы и ссылки этой вкладки</label>
+          <textarea id="ts-${i}" data-tservices="${i}" style="min-height:56px" placeholder="Например: Qwen — промты; Gamma — презентации; ссылка на кабинет…">${esc(t.services||"")}</textarea>
+        </div>
+        <div class="shot-field">
+          <span class="sl">Скриншоты, шт.</span>
+          <span class="stepper" style="--acc:${sc}">
+            <button type="button" data-sdec="${i}" aria-label="Меньше скриншотов" ${t.shots<=0?"disabled":""}>−</button>
+            <span class="val">${t.shots}</span>
+            <button type="button" data-sinc="${i}" aria-label="Больше скриншотов" ${t.shots>=8?"disabled":""}>+</button>
+          </span>
+          <span class="hint">Имена файлов и подписи придумает Qwen и скажет, куда их положить.</span>
+        </div>
+      </div>
+    </div>`).join("");
+}
+function renderChecklist(){
+  $("#checklist").innerHTML=CHECKS.map((c,i)=>`
+    <label class="chk"><input type="checkbox" data-check="${i}" ${state.checks[i]?"checked":""}>
+      <span class="box">${ICONS.check}</span><span class="ct">${esc(c)}</span></label>`).join("");
+}
+function updatePrompt(){
+  const txt=buildPrompt();
+  $("#prompt-out").textContent=txt;
+  $("#cnt").textContent=txt.length+" символов";
+  const mock=$("#mock");if(mock)mock.style.setProperty("--mock-acc",sphere().color);
+}
+function updateChecks(){
+  const n=state.checks.filter(Boolean).length;
+  $("#check-ring").textContent=n+" / "+CHECKS.length;
+  $("#check-bar").style.width=(n/CHECKS.length*100)+"%";
+  $("#check-note").textContent=n===CHECKS.length?"Всё готово — отправляйте ссылку куратору.":"Пройдите все пункты перед отправкой ссылки куратору.";
+}
+function saveChecks(){try{localStorage.setItem("tpg_guide_checks",JSON.stringify(state.checks));}catch(e){}}
+function loadChecks(){try{const v=JSON.parse(localStorage.getItem("tpg_guide_checks"));if(Array.isArray(v))state.checks=CHECKS.map((_,i)=>!!v[i]);}catch(e){}}
+function resolvedTheme(){return state.theme==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):state.theme;}
+function applyTheme(){document.documentElement.dataset.theme=resolvedTheme();
+  const b=$("#theme-btn");if(b){b.innerHTML=resolvedTheme()==="dark"?ICONS.sun:ICONS.moon;b.setAttribute("aria-label",resolvedTheme()==="dark"?"Светлая тема":"Тёмная тема");}}
+function toggleTheme(){state.theme=resolvedTheme()==="dark"?"light":"dark";try{localStorage.setItem("tpg_guide_theme",state.theme);}catch(e){}applyTheme();}
+function initReveal(){
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}}),{threshold:.1});
+  $$(".rv:not(.in)").forEach(el=>io.observe(el));
+}
+function initSpy(){
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){$$(".nav-links a").forEach(a=>a.classList.toggle("active",a.dataset.spy===en.target.id));}}),{rootMargin:"-40% 0px -55% 0px"});
+  ["how","builder","publish","check"].forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+}
+function initProgress(){
+  const bar=$("#progress");
+  const on=()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight);bar.style.width=Math.min(100,Math.max(0,p*100))+"%";};
+  addEventListener("scroll",on,{passive:true});on();
+}
+async function downloadEngine(btn){
+  const old=btn.innerHTML;btn.disabled=true;btn.innerHTML=ICONS.download+" Скачиваем…";
+  try{
+    const r=await fetch(RAW_URL,{cache:"no-store"});
+    if(!r.ok)throw new Error("http "+r.status);
+    const txt=await r.text();
+    const blob=new Blob([txt],{type:"text/html"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="index.html";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    toast("index.html скачан — прикрепите его на этапе сборки");
+  }catch(e){window.open(REPO_URL,"_blank","noopener");toast("Открыл страницу репозитория — скачайте файл оттуда");}
+  btn.disabled=false;btn.innerHTML=old;
+}
+function pickSphere(id){
+  state.sphere=id;rebuildTabs();
+  renderTiles();renderTabs();updatePrompt();
+  toast("Сфера: "+sphere().title);
+}
+function bindHandlers(){
+  $("#theme-btn").addEventListener("click",toggleTheme);
+  $("#hero-dl").addEventListener("click",e=>downloadEngine(e.currentTarget));
+  $("#repo-dl").addEventListener("click",e=>downloadEngine(e.currentTarget));
+  $("#tiles").addEventListener("click",e=>{const t=e.target.closest("[data-sphere]");if(t)pickSphere(t.dataset.sphere);});
+  $("#tg-cons").addEventListener("change",e=>{state.cons=e.target.checked;updatePrompt();});
+  $("#tg-start").addEventListener("change",e=>{
+    state.start=e.target.checked;
+    if(state.start){state.tabs.unshift(startTab(sphere()));}
+    else{state.tabs=state.tabs.filter(t=>!t.start);}
+    if(state.tabs.length<2)state.tabs.push({name:"Новая вкладка",emo:"📚",content:"",services:"",shots:0});
+    if(state.tabs.length>6)state.tabs=state.tabs.slice(0,6);
+    renderTabs();updatePrompt();
+    toast(state.start?"Вкладка «С чего начать» добавлена первой":"Вкладка «С чего начать» убрана");
+  });
+  $("#tc-dec").addEventListener("click",()=>{if(state.tabs.length>2){state.tabs.pop();renderTabs();updatePrompt();}});
+  $("#tc-inc").addEventListener("click",()=>{if(state.tabs.length<6){state.tabs.push({name:"Новая вкладка",emo:"📚",content:"",services:"",shots:0});renderTabs();updatePrompt();}});
+  $("#tabs").addEventListener("click",e=>{
+    const em=e.target.closest("[data-emo]");
+    if(em){const i=+em.closest("[data-tab]").dataset.tab;state.tabs[i].emo=em.dataset.emo;renderTabs();updatePrompt();return;}
+    const dec=e.target.closest("[data-sdec]");
+    if(dec){const i=+dec.dataset.sdec;if(state.tabs[i].shots>0){state.tabs[i].shots--;renderTabs();updatePrompt();}return;}
+    const inc=e.target.closest("[data-sinc]");
+    if(inc){const i=+inc.dataset.sinc;if(state.tabs[i].shots<8){state.tabs[i].shots++;renderTabs();updatePrompt();}return;}
+  });
+  $("#tabs").addEventListener("input",e=>{
+    const n=e.target.closest("[data-tname]");
+    if(n){state.tabs[+n.dataset.tname].name=n.value;updatePrompt();return;}
+    const c=e.target.closest("[data-tcontent]");
+    if(c){state.tabs[+c.dataset.tcontent].content=c.value;updatePrompt();return;}
+    const s=e.target.closest("[data-tservices]");
+    if(s){state.tabs[+s.dataset.tservices].services=s.value;updatePrompt();return;}
+  });
+  $("#brief-reseed").addEventListener("click",()=>{rebuildTabs();renderTabs();updatePrompt();toast("Образец наполнения возвращён");});
+  $("#copy-prompt").addEventListener("click",()=>copyText(buildPrompt(),"Промт скопирован — отправьте его в Qwen"));
+  $("#copy-stage2").addEventListener("click",()=>copyText(STAGE2_MSG,"Сообщение этапа 2 скопировано"));
+  $("#reset-all").addEventListener("click",()=>{
+    state.cons=true;state.start=true;$("#tg-cons").checked=true;$("#tg-start").checked=true;
+    rebuildTabs();renderTabs();updatePrompt();toast("Параметры сброшены");
+  });
+  $("#checklist").addEventListener("change",e=>{const c=e.target.closest("[data-check]");if(!c)return;state.checks[+c.dataset.check]=c.checked;saveChecks();updateChecks();});
+  $("#check-reset").addEventListener("click",()=>{state.checks=CHECKS.map(()=>false);saveChecks();renderChecklist();updateChecks();toast("Отметки сброшены");});
+}
+function init(){
+  try{const t=localStorage.getItem("tpg_guide_theme");if(t==="light"||t==="dark")state.theme=t;}catch(e){}
+  loadChecks();
+  rebuildTabs();
+  renderApp();bindHandlers();initSpy();initProgress();initReveal();
+}
+init();
+</script>
+</body>
+</html>
