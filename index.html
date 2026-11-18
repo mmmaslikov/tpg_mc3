@@ -19,7 +19,6 @@
   --nav-h:62px; --pad:clamp(16px,4vw,44px); --wrap:1100px; --zoom:1;
   --sb-track:#e6e6e6; --sb-thumb:#c7c7cc; --sb-hover:#a1a1a6;
 }
-/* Масштаб как на главной и на страницах сфер: 100% выглядит как 125/150% */
 @media (min-width:1800px){:root{--zoom:1.25}}
 @media (min-width:2300px){:root{--zoom:1.5}}
 html{zoom:var(--zoom)}
@@ -118,6 +117,8 @@ button{font:inherit}
 .mock-hero .mi svg{width:20px;height:20px}
 .mock-hero b{display:block;font-size:14px;color:#fff}
 .mock-hero small{display:block;font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.mock-hero .emb{margin-left:auto;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--mock-acc,#0a84ff);background:color-mix(in srgb,var(--mock-acc,#0a84ff) 14%,transparent);border:1px solid color-mix(in srgb,var(--mock-acc,#0a84ff) 34%,transparent)}
+.mock-hero .emb svg{width:22px;height:22px}
 .mock-tabs{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
 .mock-tabs i{height:26px;border-radius:8px;background:#34323e;border:1px solid rgba(255,255,255,.1);flex:1;min-width:52px}
 .mock-tabs i.on{background:color-mix(in srgb,var(--mock-acc,#0a84ff) 26%,transparent);border-color:var(--mock-acc,#0a84ff)}
@@ -300,12 +301,10 @@ const ICONS={
 
 const EMOJIS=["\u{1F6A6}","\u{1F3AF}","\u{1F310}","\u{1F4DA}","\u{1F3AE}","\u{1F3C6}","\u{1F9F0}","\u{1F9E9}","\u{1F3AC}","\u{1F393}","\u{1F91D}","\u{1F4D6}","\u{1F4CA}","\u{1F4C4}","\u{1F4C8}","\u{1F9ED}","\u{1F389}","\u{1F52C}","\u{1F3A8}"];
 
-/* Цвета сфер — ровно как на главной странице каталога.
-   dark — цвет для тёмной темы (MO.colorDark), chips — третья чипса hero (MO.chips). */
 const SPHERES=[
   {id:"math",title:"Математика, информатика, физика и труд",full:"МО математики, информатики, физики и труда",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Масликов Михаил",icon:"dev",color:"#0a84ff",dark:"#2997ff",chips:"Сайты, курсы, тренажёры, промты",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для разноуровневых задач с автопроверкой, контрольных с вариантами и адаптации материалов под уровни.",services:"Qwen — генерация кода и промтов; DeepSeek — анализ результатов.",shots:0},
-         {name:"Сайты и публикация",emo:"🌐",content:"Конвейер «тема → промт → код → файл → проверка»: мастер-класс «Сайт за час» и инструкция по GitHub Pages.",services:"GitHub Pages; GitVerse; мастер-класс tpg_mc2.",shots:1},
+         {name:"Сайты и публикация",emo:"🌐",content:"Конвейер «тема → промт → код → файл → проверка»: мастер-класс «Сайт за час» и инструкция по GitHub.",services:"GitHub; GitVerse; мастер-класс tpg_mc2.",shots:1},
          {name:"Тренажёры и игры",emo:"🎮",content:"Python-тренажёр с автопроверкой, «Своя игра» для обобщения темы, промт для собственного тренажёра.",services:"Python-тренажёр; «Своя игра» (6 класс).",shots:2}]},
   {id:"rus",title:"Русский язык и литература",full:"МО русского языка и литературы",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Нелепова Светлана",icon:"pen",color:"#ff375f",dark:"#ff375f",chips:"Промты, уроки, подготовка к экзаменам",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для сочинений, проверки орфографии и пунктуации, разбора литературных текстов.",services:"Qwen — промты; Gamma — презентации к урокам.",shots:0},
@@ -347,9 +346,10 @@ const SPHERES=[
 
 const CHECKS=[
   "Страница открывается локально и по ссылке публикации, консоль браузера без ошибок.",
-  "Шапка: значок и название вашей сферы, подзаголовок в две строки, цвет шапки из MO.color (в тёмной теме — MO.colorDark).",
+  "Шапка компактная (не на весь экран): слева название и подзаголовок в две строки с вертикальной линейкой, справа круглая эмблема со значком MO.icon; акценты — общие токены каталога.",
   "Вкладки и их названия — ваши; на мобильных переносятся, при переключении контент показывается с начала.",
-  "Одна вкладка — один цвет; скриншоты увеличиваются по центру, окно облегает изображение.",
+  "Содержимое вкладок (intro, карточки, конструктор) растянуто по ширине ряда вкладок: слева до первой, справа до последней; одна вкладка — один цвет.",
+  "Нумерованные шаги: номер по центру строки текста; скриншоты увеличиваются по центру, окно облегает изображение.",
   "Ссылка возврата на главную «Точка ИИ» работает и открывает её в том же окне.",
   "Заголовок вкладки браузера и meta-описание совпадают с вашей сферой — они подставляются из MO автоматически."
 ];
@@ -363,8 +363,8 @@ const FORMAT=`{icon:"ключ из ICONS", title:"Название", desc:"Оп�
  shots:[{file:"shot-…-1.png",cap:"Подпись"}]}   // скриншоты`;
 
 const RULES=[
-  "1. НЕ переписывай движок. Весь CSS и все JS-функции (renderApp, cardBlock, consBlock, switchTab, лайтбокс, копирование промтов, переключение темы, hash-вкладки, клавиатурная навигация вкладок, заглушки скриншотов) оставь без изменений. Меняй ТОЛЬКО: объект MO (id, title, full, sub, head, icon, color, colorDark, chips), TABS, CONTENT, при необходимости CONS и комментарий со списком скриншотов сверху. НЕ трогай вручную CSS, :root, --hero-acc, <title> и meta description — движок подставляет их из MO сам.",
-  "2. Дизайн не менять: фон #f2f2f2 (тёмная тема #161616), угольная шапка БЕЗ градиента, подзаголовок шапки в две строки, карточки с цветной полосой сверху, вкладки-плитки (на мобильных переносятся, не уезжают за экран), описание вкладки по ширине карточек и выключено по формату, лайтбокс облегает изображение и центрирован на мобильных, футер без заголовка, копирайт на мобильных в две строки. Цвет шапки и акцент hero берутся из MO.color / MO.colorDark автоматически; масштаб страницы (--zoom) уже настроен как на главной — не меняй его.",
+  "1. НЕ переписывай движок. Весь CSS и все JS-функции (renderApp, cardBlock, consBlock, switchTab, лайтбокс, копирование промтов, переключение темы, hash-вкладки, клавиатурная навигация вкладок, заглушки скриншотов) оставь без изменений. Меняй ТОЛЬКО: объект MO (id, title, full, sub, head, icon, chips; color/colorDark — справочные цвета сферы для каталога), TABS, CONTENT, при необходимости CONS и комментарий со списком скриншотов сверху. НЕ трогай вручную CSS, :root, --hero-acc, <title> и meta description — заголовок вкладки, meta и название в шапке движок подставляет из MO сам.",
+  "2. Дизайн не менять: фон #f2f2f2 (тёмная тема #161616), угольная шапка. Hero компактный (НЕ на весь экран): слева kicker, название с вертикальной линейкой и подзаголовок в две строки, чипсы; справа круглая эмблема со значком MO.icon, прижатая к правому краю контента и не выходящая за границы кнопки темы и ряда вкладок. Вкладки-плитки (на мобильных переносятся, не уезжают за экран). Содержимое вкладок (intro, карточки, конструктор) растянуто по ширине ряда вкладок: слева до первой вкладки, справа до последней; между рядом вкладок и intro минимальный отступ. Карточки с цветной полосой сверху; нумерованные шаги — номер по центру строки текста; описание вкладки выключено по формату; лайтбокс облегает изображение и центрирован на мобильных; футер без заголовка, копирайт на мобильных в две строки. Акценты hero и шапки — общие токены каталога (--hero-acc), НЕ из MO.color; масштаб (--zoom) как на главной — не менять.",
   "3. Одна вкладка = один цвет: все карточки внутри наследуют цвет вкладки. Палитру PAL не менять и не добавлять новые цвета.",
   "4. Оформление текста (жирный, капс, списки) — на твоё усмотрение: используй, если это помогает читаемости, но держи единый аккуратный стиль.",
   "5. Ссылки: внешние сервисы открывай в новом окне; ссылки на главную «Точка ИИ» и любые внутренние якоря — в том же окне (поле same:true у ссылки).",
@@ -377,7 +377,7 @@ const RULES=[
 
 const STAGE2_MSG="Я переключился в режим «Артефакты» / «Веб-разработка» и прикрепил index.html из репозитория. План согласован. Собирай страницу по плану одним полным файлом index.html, соблюдая правила из первого сообщения.";
 
-const state={sphere:"math",tabs:[],cons:true,start:true,theme:"auto",checks:[false,false,false,false,false,false]};
+const state={sphere:"math",tabs:[],cons:true,start:true,theme:"auto",checks:[false,false,false,false,false,false,false]};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -400,9 +400,6 @@ async function copyText(txt,msg){
     try{document.execCommand("copy");toast(msg||"Скопировано");}catch(err){toast("Скопируйте вручную из поля ниже");}
     document.body.removeChild(ta);}
 }
-/* Блок сферы = полный объект MO нового движка.
-   Значки всех сфер уже есть в ICONS движка — добавлять строку значка не нужно.
-   Цвет шапки, <title>, meta и название в шапке движок берёт из MO сам. */
 function blockText(s){
   return [
     "const MO={",
@@ -493,7 +490,7 @@ function renderApp(){
       <div class="mock rv" id="mock" style="--mock-acc:${s.color}" aria-hidden="true">
         <div class="mock-bar"><i></i><i></i><i></i><span>sphere-page · index.html</span></div>
         <div class="mock-body">
-          <div class="mock-hero"><span class="mi">${ICONS[s.icon]}</span><span><b>${esc(s.title)}</b><small>${esc(s.sub0)}</small></span></div>
+          <div class="mock-hero"><span class="mi">${ICONS[s.icon]}</span><span><b>${esc(s.title)}</b><small>${esc(s.sub0)}</small></span><span class="emb">${ICONS[s.icon]}</span></div>
           <div class="mock-tabs"><i class="on"></i><i></i><i></i><i></i></div>
           <div class="mock-cards"><i></i><i></i><i></i></div>
         </div>
@@ -623,7 +620,7 @@ function renderApp(){
     <div class="check-wrap">
       <div class="card checklist" id="checklist"></div>
       <aside class="card check-side">
-        <span class="ring" id="check-ring">0 / 6</span>
+        <span class="ring" id="check-ring">0 / 7</span>
         <div class="bar"><i id="check-bar"></i></div>
         <p id="check-note">Пройдите все пункты перед отправкой ссылки куратору.</p>
         <button class="btn ghost sm" type="button" id="check-reset">${ICONS.refresh} Сбросить отметки</button>
@@ -648,6 +645,7 @@ function renderTiles(){
 }
 function renderTabs(){
   const sc=sphere().color;
+  state.tabs.forEach((t,i)=>{if(!t.emo)t.emo=EMOJIS[i%EMOJIS.length];});
   $("#tc-val").textContent=state.tabs.length;
   $("#tc-dec").disabled=state.tabs.length<=2;
   $("#tc-inc").disabled=state.tabs.length>=6;
@@ -676,7 +674,7 @@ function renderTabs(){
             <span class="val">${t.shots}</span>
             <button type="button" data-sinc="${i}" aria-label="Больше скриншотов" ${t.shots>=8?"disabled":""}>+</button>
           </span>
-          <span class="hint">Имена и подписи придумает Qwen и скажет, куда положить.</span>
+          <span class="hint">Имена файлов и подписи придумает Qwen и скажет, куда их положить.</span>
         </div>
       </div>
     </div>`).join("");
@@ -787,22 +785,5 @@ function init(){
 }
 init();
 </script>
-<!--
-  ИЗМЕНЕНИЯ ИНСТРУКЦИИ ПОД НОВЫЙ index.html (mift):
-  1. Блок сферы теперь = полный объект MO: id, title, full, sub, head, icon, color, colorDark, chips.
-     Строка значка для ICONS и комментарий --hero-acc больше НЕ нужны: все значки сфер уже есть
-     в ICONS движка, а цвет шапки, <title>, meta description и название в шапке движок берёт из MO сам.
-  2. Правило 1 переписано: менять только MO / TABS / CONTENT / CONS и комментарий скриншотов;
-     CSS, :root, --hero-acc, <title> и meta вручную не трогать. Добавлен запрет менять --zoom.
-  3. В SPHERES добавлены поля dark (MO.colorDark) и chips (MO.chips) для всех 10 сфер;
-     blockText() и текст промта обновлены под новый формат MO.
-  4. Правило 9 дополнено: MO.chips попадает в третью чипсу hero.
-  5. Чек-лист: пункт про шапку уточнён (цвет из MO.color / MO.colorDark), добавлен шестой пункт
-     про авто-заголовок вкладки браузера и meta-описание; счётчик и состояние — 6 пунктов.
-  6. Зум приведён к главной и страницам сфер: 1.25 при >=1800px и 1.5 при >=2300px;
-     vh/vw-размеры оверлеев (превью промта, тост) компенсированы делением на var(--zoom),
-     чтобы при масштабе ничего не вылезало за экран.
-  7. Убраны упоминания «добавь значок в ICONS» и «--hero-acc указано в блоке сферы» из промта и правил.
--->
 </body>
 </html>
