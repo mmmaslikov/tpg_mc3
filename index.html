@@ -193,14 +193,16 @@ button{font:inherit}
 .emo:hover{border-color:var(--sc);transform:translateY(-1px)}
 .emo.on{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 14%,transparent);box-shadow:inset 0 -2px 0 var(--sc)}
 .tabed-grid{display:grid;gap:10px}
-@media (min-width:760px){.tabed-grid{grid-template-columns:minmax(0,1fr) auto}}
+@media (min-width:760px){.tabed-grid{grid-template-columns:minmax(0,1fr) clamp(190px,28%,260px)}}
 .field label{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .field input[type=text],.field textarea{width:100%;font:14px/1.55 inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .field textarea{min-height:76px;resize:vertical;font-family:inherit;scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
 .field input:focus,.field textarea:focus{outline:3px solid var(--accent);outline-offset:2px}
-.shot-field{display:grid;gap:6px;align-content:start;justify-items:end;text-align:right}
+.shot-field{display:grid;gap:6px;align-content:start;justify-items:stretch;text-align:left}
 .shot-field .sl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.shot-field .hint{font-size:11.5px;color:var(--muted);max-width:190px}
+.shot-field .hint{font-size:11.5px;color:var(--muted);max-width:none}
+.shot-field .stepper{width:100%;justify-content:space-between}
+.shot-field .stepper .val{flex:1}
 .preview{padding:clamp(18px,2.4vw,24px);display:grid;gap:14px;border-top:4px solid var(--accent)}
 .preview-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .preview-head h3{font-size:17px;flex:1}
