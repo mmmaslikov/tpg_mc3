@@ -19,7 +19,9 @@
   --nav-h:62px; --pad:clamp(16px,4vw,44px); --wrap:1100px; --zoom:1;
   --sb-track:#e6e6e6; --sb-thumb:#c7c7cc; --sb-hover:#a1a1a6;
 }
-@media (min-width:1800px){:root{--zoom:1.2}}
+/* Масштаб как на главной и на страницах сфер: 100% выглядит как 125/150% */
+@media (min-width:1800px){:root{--zoom:1.25}}
+@media (min-width:2300px){:root{--zoom:1.5}}
 html{zoom:var(--zoom)}
 [data-theme="dark"]{
   --bg:#161616; --m2:#1d1d1d; --charcoal:#232120;
@@ -202,7 +204,7 @@ button{font:inherit}
 .preview-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .preview-head h3{font-size:17px;flex:1}
 .preview-head .cnt{font-size:12px;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
-.preview pre{margin:0;max-height:60vh;overflow:auto;padding:16px 18px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--text);scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
+.preview pre{margin:0;max-height:calc(60vh/var(--zoom));overflow:auto;padding:16px 18px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--text);scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
 .preview-actions{display:flex;gap:8px;flex-wrap:wrap}
 .stage2{padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--green) 8%,var(--surface-2));border:1px dashed color-mix(in srgb,var(--green) 45%,var(--line));display:grid;gap:10px}
 .stage2 b{font-size:13.5px;color:var(--green)}
@@ -247,7 +249,7 @@ button{font:inherit}
 .f-copy{color:rgba(255,255,255,.55);font-size:14px;line-height:1.6}
 .f-copy span{display:inline}
 @media (max-width:700px){.f-copy span{display:block}.f-copy .f-sep{display:none}}
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:300;padding:12px 22px;border-radius:12px;background:var(--charcoal);color:#fff;border:1px solid rgba(255,255,255,.18);font-size:14.5px;font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s;max-width:calc(100vw - 32px);text-align:center}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:300;padding:12px 22px;border-radius:12px;background:var(--charcoal);color:#fff;border:1px solid rgba(255,255,255,.18);font-size:14.5px;font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s;max-width:calc(100vw/var(--zoom) - 32px);text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
@@ -269,11 +271,11 @@ const ICONS={
   dev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>',
   pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
   scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M8 20h8M12 6l6 2-6-2-6 2 6-2z"/><path d="M6 8l-3 6a3.2 3.2 0 0 0 6 0zM18 8l-3 6a3.2 3.2 0 0 0 6 0z"/></svg>',
-  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a13.5 13.5 0 0 1 0 18 13.5 13.5 0 0 1 0-18z"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a13.5 13.5 0 0 1 0 18 13.5 13.5 0 0 1 0-18z"/></svg>',
   target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1"/></svg>',
   brain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>',
-  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.6"/><circle cx="18" cy="5" r="2.6"/><path d="M8.6 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.4"/></svg>',
-  sparkles:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4M19 17v4M3 5h4M17 19h4"/></svg>',
+  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="19" r="2.6"/><circle cx="18" cy="5" r="2.6"/><path d="M8.6 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.4"/></svg>',
+  sparkles:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>',
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 1 1 12 6.3a5 5 0 1 1 7.5 6.3Z"/></svg>',
   briefcase:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
@@ -296,47 +298,48 @@ const ICONS={
   compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-4 1 2-5z"/></svg>'
 };
 
-const EMOJIS=["🚦","🎯","🌐","📚","🎮","🏆","🧰","🧩","🎬","🎓","🤝","📖","📊","📄","📈","🧭","🎉","🔬","🎨"];
+const EMOJIS=["🚦","","🌐","","🎮","","🧰","","🎬","","🤝","","📊","","📈","","🎉","","🎨"];
 
-/* Цвета сфер — ровно как на главной странице каталога */
+/* Цвета сфер — ровно как на главной странице каталога.
+   dark — цвет для тёмной темы (MO.colorDark), chips — третья чипса hero (MO.chips). */
 const SPHERES=[
-  {id:"math",title:"Математика, информатика, физика и труд",full:"МО математики, информатики, физики и труда",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Масликов Михаил",icon:"dev",color:"#0a84ff",
+  {id:"math",title:"Математика, информатика, физика и труд",full:"МО математики, информатики, физики и труда",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Масликов Михаил",icon:"dev",color:"#0a84ff",dark:"#2997ff",chips:"Сайты, курсы, тренажёры, промты",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для разноуровневых задач с автопроверкой, контрольных с вариантами и адаптации материалов под уровни.",services:"Qwen — генерация кода и промтов; DeepSeek — анализ результатов.",shots:0},
          {name:"Сайты и публикация",emo:"🌐",content:"Конвейер «тема → промт → код → файл → проверка»: мастер-класс «Сайт за час» и инструкция по GitHub Pages.",services:"GitHub Pages; GitVerse; мастер-класс tpg_mc2.",shots:1},
          {name:"Тренажёры и игры",emo:"🎮",content:"Python-тренажёр с автопроверкой, «Своя игра» для обобщения темы, промт для собственного тренажёра.",services:"Python-тренажёр; «Своя игра» (6 класс).",shots:2}]},
-  {id:"rus",title:"Русский язык и литература",full:"МО русского языка и литературы",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Нелепова Светлана",icon:"pen",color:"#ff375f",
+  {id:"rus",title:"Русский язык и литература",full:"МО русского языка и литературы",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Нелепова Светлана",icon:"pen",color:"#ff375f",dark:"#ff375f",chips:"Промты, уроки, подготовка к экзаменам",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для сочинений, проверки орфографии и пунктуации, разбора литературных текстов.",services:"Qwen — промты; Gamma — презентации к урокам.",shots:0},
          {name:"Уроки и материалы",emo:"📚",content:"Готовые презентации и рабочие листы по литературе и русскому языку.",services:"Gamma; библиотека рабочих листов МО.",shots:2},
          {name:"ЕГЭ, ОГЭ и ВПР",emo:"🏆",content:"Генерация вариантов и анализ типовых ошибок; ссылка на кабинет подготовки.",services:"Кабинет подготовки к ЕГЭ и ОГЭ.",shots:1}]},
-  {id:"soc",title:"Общественные и естественно-научные дисциплины",full:"МО общественных и естественно-научных дисциплин",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Еронько Ася",icon:"scale",color:"#ff9f0a",
+  {id:"soc",title:"Общественные и естественно-научные дисциплины",full:"МО общественных и естественно-научных дисциплин",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Еронько Ася",icon:"scale",color:"#ff9f0a",dark:"#ff9f0a",chips:"Кейсы, инфографика, документы",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для обществоведческих кейсов, работы с историческими документами и правовыми текстами.",services:"Qwen; DeepSeek — разбор больших документов.",shots:0},
          {name:"Уроки и кейсы",emo:"📚",content:"Инфографика, хронологические ленты и практические кейсы по истории и обществознанию.",services:"Gamma — инфографика и схемы.",shots:2},
          {name:"ЕГЭ и ОГЭ",emo:"🏆",content:"Задания по диаграммам и графикам, генерация вариантов в формате экзамена.",services:"Кабинет подготовки; банк диаграмм.",shots:1}]},
-  {id:"lang",title:"Иностранные языки",full:"МО иностранных языков",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Денисов Егор, Шигарова Ирина",icon:"globe",color:"#30d158",
+  {id:"lang",title:"Иностранные языки",full:"МО иностранных языков",sub0:"Методическое объединение ЧОУ «Точка будущего»",head:"Денисов Егор, Шигарова Ирина",icon:"globe",color:"#30d158",dark:"#30d158",chips:"Упражнения, аудио, квизы",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для упражнений по грамматике и лексике, адаптации аутентичных текстов под уровни A1–C2.",services:"Qwen; GigaChat — русскоязычные пояснения.",shots:0},
          {name:"Уроки и материалы",emo:"📚",content:"Рабочие листы и lesson plans с таймингом; скриншоты готовых материалов.",services:"Gamma; банк рабочих листов МО.",shots:2},
          {name:"Аудио, видео, квизы",emo:"🎬",content:"Аудирование и диалоги, игровые квизы для повторения лексики.",services:"Генераторы аудио; квиз-платформы.",shots:1}]},
-  {id:"sport",title:"Физическое воспитание и спорт",full:"Отдел физического воспитания и спорта",sub0:"Отдел физического воспитания и спорта ЧОУ «Точка будущего»",head:"Максимова Валентина",icon:"target",color:"#ff453a",
+  {id:"sport",title:"Физическое воспитание и спорт",full:"Отдел физического воспитания и спорта",sub0:"Отдел физического воспитания и спорта ЧОУ «Точка будущего»",head:"Максимова Валентина",icon:"target",color:"#ff453a",dark:"#ff453a",chips:"Сценарии, мониторинг, события",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для планов тренировок разноуровневых и сменных групп, сценариев соревнований.",services:"Qwen — планы и сценарии.",shots:0},
          {name:"События и сценарии",emo:"🎉",content:"Сценарии спортивных праздников и дней здоровья, афиши и поздравления.",services:"Шедеврум — афиши; Gamma — презентации событий.",shots:2},
          {name:"Мониторинг и планы",emo:"📊",content:"Оцифровка нормативов и аналитические отчёты по физподготовленности.",services:"DeepSeek — анализ таблиц нормативов.",shots:1}]},
-  {id:"psy",title:"Социально-психологическая служба",full:"Социально-психологическая служба",sub0:"Социально-психологическая служба ЧОУ «Точка будущего»",head:"Тимофеев Семён, Ильина Александра",icon:"brain",color:"#bf5af2",
+  {id:"psy",title:"Социально-психологическая служба",full:"Социально-психологическая служба",sub0:"Социально-психологическая служба ЧОУ «Точка будущего»",head:"Тимофеев Семён, Ильина Александра",icon:"brain",color:"#bf5af2",dark:"#bf5af2",chips:"Диагностика, отчёты, памятки",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для анализа анонимных диагностик и консолидации отчётов рабочих групп; запрет на ФИО и диагнозы.",services:"DeepSeek — обезличенные таблицы.",shots:0},
          {name:"Диагностика и отчёты",emo:"📊",content:"Обработка диагностических бланков по обезличенным кодам, наглядные отчёты.",services:"DeepSeek; шаблоны отчётов СПС.",shots:1},
          {name:"Занятия и памятки",emo:"🤝",content:"Сценарии коррекционных занятий и памятки родителям и педагогам.",services:"Qwen — сценарии и памятки.",shots:0}]},
-  {id:"tutor",title:"Тьюторская поддержка",full:"Служба тьюторской поддержки",sub0:"Служба тьюторской поддержки ЧОУ «Точка будущего»",head:"Гармышева Анастасия",icon:"route",color:"#5e5ce6",
+  {id:"tutor",title:"Тьюторская поддержка",full:"Служба тьюторской поддержки",sub0:"Служба тьюторской поддержки ЧОУ «Точка будущего»",head:"Гармышева Анастасия",icon:"route",color:"#5e5ce6",dark:"#5e5ce6",chips:"Маршруты, динамика, профориентация",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для персональных маршрутов, отчётов о динамике и профориентационных гипотез.",services:"Qwen — маршруты и отчёты.",shots:0},
          {name:"Маршруты и динамика",emo:"🧭",content:"Индивидуальные образовательные маршруты и карты интересов ученика.",services:"Шаблоны маршрутов; карты интересов.",shots:1},
          {name:"Профориентация",emo:"🎓",content:"Подбор вузов и ссузов, материалы для разговора с родителями.",services:"Базы вузов и ссузов; профтесты.",shots:0}]},
-  {id:"upbr",title:"Воспитательная работа",full:"Отдел по воспитательной работе",sub0:"Отдел по воспитательной работе ЧОУ «Точка будущего»",head:"Истомин Вадим",icon:"sparkles",color:"#ffd60a",
+  {id:"upbr",title:"Воспитательная работа",full:"Отдел по воспитательной работе",sub0:"Отдел по воспитательной работе ЧОУ «Точка будущего»",head:"Истомин Вадим",icon:"sparkles",color:"#ffd60a",dark:"#ffd60a",chips:"Сценарии, тексты, аналитика",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для сценариев классных часов, постов и официальных сообщений, характеристик.",services:"Qwen — тексты и сценарии.",shots:0},
          {name:"События и классные часы",emo:"🎉",content:"Сценарии мероприятий и часов общения, презентации и моушн-идеи.",services:"Gamma; Шедеврум — афиши событий.",shots:2},
          {name:"Тексты и аналитика",emo:"📄",content:"Аналитика собраний по диктофонной записи без ФИО, отчёты и характеристики.",services:"DeepSeek — расшифровки и аналитика.",shots:0}]},
-  {id:"inkl",title:"Инклюзивное образование",full:"Служба сопровождения инклюзивного образования",sub0:"Служба сопровождения инклюзивного образования ЧОУ «Точка будущего»",head:"Абрамова Валерия",icon:"heart",color:"#64d2ff",
+  {id:"inkl",title:"Инклюзивное образование",full:"Служба сопровождения инклюзивного образования",sub0:"Служба сопровождения инклюзивного образования ЧОУ «Точка будущего»",head:"Абрамова Валерия",icon:"heart",color:"#64d2ff",dark:"#64d2ff",chips:"Адаптация, наглядность, документация",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для адаптации заданий и планирования коррекционной работы; запрет на диагнозы и ФИО.",services:"Qwen — адаптация материалов.",shots:0},
          {name:"Адаптация материалов",emo:"🧩",content:"Адаптированные задания и визуальная поддержка под индивидуальные потребности.",services:"Банк адаптированных заданий.",shots:1},
          {name:"Наглядность и документация",emo:"🗂",content:"Рабочие листы, речевой материал для подростков, профессиональная документация.",services:"Шедеврум — наглядность; шаблоны документации.",shots:2}]},
-  {id:"admin",title:"Административно-управленческий персонал",full:"Административно-управленческий персонал",sub0:"Административно-управленческий персонал ЧОУ «Точка будущего»",head:"Никулин Егор",icon:"briefcase",color:"#30b0c7",
+  {id:"admin",title:"Административно-управленческий персонал",full:"Административно-управленческий персонал",sub0:"Административно-управленческий персонал ЧОУ «Точка будущего»",head:"Никулин Егор",icon:"briefcase",color:"#30b0c7",dark:"#30b0c7",chips:"Документы, совещания, аналитика",
    seed:[{name:"Промты и сервисы",emo:"🎯",content:"Промты для приказов, распоряжений и протоколов по шаблону, конспектов совещаний.",services:"Qwen — документы по шаблону.",shots:0},
          {name:"Документооборот",emo:"📄",content:"Шаблоны документов и официальных ответов, программы развития.",services:"Банк шаблонов документов.",shots:0},
          {name:"Совещания и аналитика",emo:"📊",content:"Конспекты совещаний с решениями и сроками, аналитика образовательных показателей.",services:"DeepSeek — аналитика показателей.",shots:1}]}
@@ -344,10 +347,11 @@ const SPHERES=[
 
 const CHECKS=[
   "Страница открывается локально и по ссылке публикации, консоль браузера без ошибок.",
-  "Шапка: значок вашей сферы, подзаголовок в две строки, цвет шапки из вашего блока.",
+  "Шапка: значок и название вашей сферы, подзаголовок в две строки, цвет шапки из MO.color (в тёмной теме — MO.colorDark).",
   "Вкладки и их названия — ваши; на мобильных переносятся, при переключении контент показывается с начала.",
   "Одна вкладка — один цвет; скриншоты увеличиваются по центру, окно облегает изображение.",
-  "Ссылка возврата на главную «Точка ИИ» работает и открывает её в том же окне."
+  "Ссылка возврата на главную «Точка ИИ» работает и открывает её в том же окне.",
+  "Заголовок вкладки браузера и meta-описание совпадают с вашей сферой — они подставляются из MO автоматически."
 ];
 
 const FORMAT=`{icon:"ключ из ICONS", title:"Название", desc:"Описание.",
@@ -359,21 +363,21 @@ const FORMAT=`{icon:"ключ из ICONS", title:"Название", desc:"Оп�
  shots:[{file:"shot-…-1.png",cap:"Подпись"}]}   // скриншоты`;
 
 const RULES=[
-  "1. НЕ переписывай движок. Весь CSS и все JS-функции (renderApp, cardBlock, consBlock, switchTab, лайтбокс, копирование промтов, переключение темы, прокрутка к началу вкладки, заглушки скриншотов) оставь без изменений. Меняй ТОЛЬКО: константы MO, TABS, CONTENT, при необходимости CONS, комментарий со списком скриншотов сверху, <title> и meta description, и значение --hero-acc (указано в блоке сферы).",
-  "2. Дизайн не менять: фон #f2f2f2 (тёмная тема #161616), угольная шапка БЕЗ градиента, подзаголовок шапки в две строки, карточки с цветной полосой сверху, вкладки-плитки (на мобильных переносятся, не уезжают за экран), описание вкладки по ширине карточек и выключено по формату, лайтбокс облегает изображение и центрирован на мобильных, футер без заголовка, копирайт на мобильных в две строки.",
+  "1. НЕ переписывай движок. Весь CSS и все JS-функции (renderApp, cardBlock, consBlock, switchTab, лайтбокс, копирование промтов, переключение темы, hash-вкладки, клавиатурная навигация вкладок, заглушки скриншотов) оставь без изменений. Меняй ТОЛЬКО: объект MO (id, title, full, sub, head, icon, color, colorDark, chips), TABS, CONTENT, при необходимости CONS и комментарий со списком скриншотов сверху. НЕ трогай вручную CSS, :root, --hero-acc, <title> и meta description — движок подставляет их из MO сам.",
+  "2. Дизайн не менять: фон #f2f2f2 (тёмная тема #161616), угольная шапка БЕЗ градиента, подзаголовок шапки в две строки, карточки с цветной полосой сверху, вкладки-плитки (на мобильных переносятся, не уезжают за экран), описание вкладки по ширине карточек и выключено по формату, лайтбокс облегает изображение и центрирован на мобильных, футер без заголовка, копирайт на мобильных в две строки. Цвет шапки и акцент hero берутся из MO.color / MO.colorDark автоматически; масштаб страницы (--zoom) уже настроен как на главной — не меняй его.",
   "3. Одна вкладка = один цвет: все карточки внутри наследуют цвет вкладки. Палитру PAL не менять и не добавлять новые цвета.",
   "4. Оформление текста (жирный, капс, списки) — на твоё усмотрение: используй, если это помогает читаемости, но держи единый аккуратный стиль.",
   "5. Ссылки: внешние сервисы открывай в новом окне; ссылки на главную «Точка ИИ» и любые внутренние якоря — в том же окне (поле same:true у ссылки).",
   "6. Скриншоты: в брифе указано только КОЛИЧЕСТВО картинок на вкладку. Для каждой сам придумай имя файла вида shot-<сфера>-N.png и подпись, подключи через shots:[{file,cap}]. В конце ответа отдельным списком перечисли, какие файлы с какими именами куда положить (папка images/ рядом с index.html), чтобы я их загрузил. Сами изображения не выдумывай: пока файл не загружен, страница покажет заглушку с его именем.",
   "7. Промты — по желанию. Если они есть, делай их развёрнутыми техзаданиями (роль, нумерованная структура результата, требования, что добавить в конце), прячь под кнопку «Показать промт», рядом кнопки «Скопировать» и «Открыть в Qwen».",
   "8. Конструктор промтов — по желанию. Если он нужен, адаптируй CONS под мой предмет (списки subjects, formats, outputs). Если не нужен — удали вызов consBlock() и сам блок, остальное не трогай.",
-  "9. Вкладки: количество, названия, emoji и состав карточек — из моего брифа. Наполнение каждой вкладки ориентируй на запросы моей сферы из раздела «Применение ИИ по сферам» ("+REQ_URL+"): закрой каждый запрос хотя бы одной карточкой, алгоритмом или промтом. Сервисы и ссылки, указанные у вкладки, размести карточками именно в этой вкладке.",
+  "9. Вкладки: количество, названия, emoji и состав карточек — из моего брифа. Наполнение каждой вкладки ориентируй на запросы моей сферы из раздела «Применение ИИ по сферам» ("+REQ_URL+"): закрой каждый запрос хотя бы одной карточкой, алгоритмом или промтом. Сервисы и ссылки, указанные у вкладки, размести карточками именно в этой вкладке. Значение MO.chips попадёт в третью чипсу hero — подбери 3–4 слова о сфере.",
   "10. Ответ выдай ОДНИМ полным файлом index.html, без пояснений до кода; после кода — список файлов скриншотов и куда их положить."
 ];
 
 const STAGE2_MSG="Я переключился в режим «Артефакты» / «Веб-разработка» и прикрепил index.html из репозитория. План согласован. Собирай страницу по плану одним полным файлом index.html, соблюдая правила из первого сообщения.";
 
-const state={sphere:"math",tabs:[],cons:true,start:true,theme:"auto",checks:[false,false,false,false,false]};
+const state={sphere:"math",tabs:[],cons:true,start:true,theme:"auto",checks:[false,false,false,false,false,false]};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -396,8 +400,23 @@ async function copyText(txt,msg){
     try{document.execCommand("copy");toast(msg||"Скопировано");}catch(err){toast("Скопируйте вручную из поля ниже");}
     document.body.removeChild(ta);}
 }
+/* Блок сферы = полный объект MO нового движка.
+   Значки всех сфер уже есть в ICONS движка — добавлять строку значка не нужно.
+   Цвет шапки, <title>, meta и название в шапке движок берёт из MO сам. */
 function blockText(s){
-  return [`const MO={title:"${s.title}",`,`  sub:["${s.sub0}","Страница каталога «Точка ИИ»"],`,`  head:"${s.head}",icon:"${s.icon}"};`,`/* --hero-acc: ${s.color} */`,`${s.icon}:'${ICONS[s.icon]}',`].join("\n");
+  return [
+    "const MO={",
+    `  id:"${s.id}",`,
+    `  title:"${s.title}",`,
+    `  full:"${s.full}",`,
+    `  sub:["${s.sub0}","Страница каталога «Точка ИИ»"],`,
+    `  head:"${s.head}",`,
+    `  icon:"${s.icon}",`,
+    `  color:"${s.color}",`,
+    `  colorDark:"${s.dark}",`,
+    `  chips:"${s.chips}"`,
+    "};"
+  ].join("\n");
 }
 function briefText(){
   const s=sphere();const L=[];
@@ -431,7 +450,7 @@ function buildPrompt(){
   L.push("ФОРМАТ ДАННЫХ (карточка может сочетать любые поля):");
   L.push(FORMAT);
   L.push("");
-  L.push("БЛОК МОЕЙ СФЕРЫ (вставь как есть; строку со значком добавь внутрь объекта ICONS):");
+  L.push("БЛОК МОЕЙ СФЕРЫ (вставь как есть — это объект MO; значки всех сфер уже есть в ICONS движка, добавлять ничего не нужно):");
   L.push(blockText(s));
   L.push("");
   L.push("МОЙ БРИФ НАПОЛНЕНИЯ:");
@@ -604,7 +623,7 @@ function renderApp(){
     <div class="check-wrap">
       <div class="card checklist" id="checklist"></div>
       <aside class="card check-side">
-        <span class="ring" id="check-ring">0 / 5</span>
+        <span class="ring" id="check-ring">0 / 6</span>
         <div class="bar"><i id="check-bar"></i></div>
         <p id="check-note">Пройдите все пункты перед отправкой ссылки куратору.</p>
         <button class="btn ghost sm" type="button" id="check-reset">${ICONS.refresh} Сбросить отметки</button>
@@ -768,5 +787,22 @@ function init(){
 }
 init();
 </script>
+<!--
+  ИЗМЕНЕНИЯ ИНСТРУКЦИИ ПОД НОВЫЙ index.html (mift):
+  1. Блок сферы теперь = полный объект MO: id, title, full, sub, head, icon, color, colorDark, chips.
+     Строка значка для ICONS и комментарий --hero-acc больше НЕ нужны: все значки сфер уже есть
+     в ICONS движка, а цвет шапки, <title>, meta description и название в шапке движок берёт из MO сам.
+  2. Правило 1 переписано: менять только MO / TABS / CONTENT / CONS и комментарий скриншотов;
+     CSS, :root, --hero-acc, <title> и meta вручную не трогать. Добавлен запрет менять --zoom.
+  3. В SPHERES добавлены поля dark (MO.colorDark) и chips (MO.chips) для всех 10 сфер;
+     blockText() и текст промта обновлены под новый формат MO.
+  4. Правило 9 дополнено: MO.chips попадает в третью чипсу hero.
+  5. Чек-лист: пункт про шапку уточнён (цвет из MO.color / MO.colorDark), добавлен шестой пункт
+     про авто-заголовок вкладки браузера и meta-описание; счётчик и состояние — 6 пунктов.
+  6. Зум приведён к главной и страницам сфер: 1.25 при >=1800px и 1.5 при >=2300px;
+     vh/vw-размеры оверлеев (превью промта, тост) компенсированы делением на var(--zoom),
+     чтобы при масштабе ничего не вылезало за экран.
+  7. Убраны упоминания «добавь значок в ICONS» и «--hero-acc указано в блоке сферы» из промта и правил.
+-->
 </body>
 </html>
