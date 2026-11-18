@@ -197,7 +197,7 @@ button{font:inherit}
 .field input[type=text],.field textarea{width:100%;font:14px/1.55 inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .field textarea{min-height:76px;resize:vertical;font-family:inherit;scrollbar-width:thin;scrollbar-color:var(--sb-thumb) var(--sb-track)}
 .field input:focus,.field textarea:focus{outline:3px solid var(--accent);outline-offset:2px}
-.shot-field{display:grid;gap:6px;align-content:start}
+.shot-field{display:grid;gap:6px;align-content:start;justify-items:end;text-align:right}
 .shot-field .sl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .shot-field .hint{font-size:11.5px;color:var(--muted);max-width:190px}
 .preview{padding:clamp(18px,2.4vw,24px);display:grid;gap:14px;border-top:4px solid var(--accent)}
@@ -298,7 +298,7 @@ const ICONS={
   compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-4 1 2-5z"/></svg>'
 };
 
-const EMOJIS=["🚦","","🌐","","🎮","","🧰","","🎬","","🤝","","📊","","📈","","🎉","","🎨"];
+const EMOJIS=["\u{1F6A6}","\u{1F3AF}","\u{1F310}","\u{1F4DA}","\u{1F3AE}","\u{1F3C6}","\u{1F9F0}","\u{1F9E9}","\u{1F3AC}","\u{1F393}","\u{1F91D}","\u{1F4D6}","\u{1F4CA}","\u{1F4C4}","\u{1F4C8}","\u{1F9ED}","\u{1F389}","\u{1F52C}","\u{1F3A8}"];
 
 /* Цвета сфер — ровно как на главной странице каталога.
    dark — цвет для тёмной темы (MO.colorDark), chips — третья чипса hero (MO.chips). */
